@@ -3,3 +3,5 @@ uvicorn
 pymysql
 python-dotenv
 mysql-connector-python
+pytest
+httpx
