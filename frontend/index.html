@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Tier Web App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .input-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .text-list {
+            margin-top: 30px;
+        }
+        .text-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .success {
+            color: green;
+            text-align: center;
+            margin: 10px 0;
+        }
+        #textList {
+            list-style: none;
+            padding: 0;
+        }
+        #textList li {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3-Tier Web Application</h1>
+        
+        <div class="input-group">
+            <input type="text" id="inputText" placeholder="Enter your text here...">
+            <button onclick="sendText()">Submit</button>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="text-list">
+            <h2>Stored Texts:</h2>
+            <ul id="textList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Frontend runs in browser, so use localhost
+        const API_BASE = 'http://localhost:8000';
+
+        async function sendText() {
+            const input = document.getElementById("inputText");
+            const messageDiv = document.getElementById("message");
+            const text = input.value.trim();
+            
+            if (!text) {
+                messageDiv.innerHTML = '<div class="error">Please enter some text</div>';
+                return;
+            }
+
+            console.log('Sending text:', text);
+            try {
+                const response = await fetch(`${API_BASE}/submit`, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({text: text})
+                });
+
+                console.log('Response status:', response.status);
+                if (response.ok) {
+                    messageDiv.innerHTML = '<div class="success">Text saved successfully!</div>';
+                    input.value = ''; // Clear input
+                    loadTexts(); // Reload the list
+                } else {
+                    const errorData = await response.json();
+                    messageDiv.innerHTML = `<div class="error">Error: ${errorData.detail || 'Failed to save text'}</div>`;
+                }
+            } catch (error) {
+                console.error('Error sending text:', error);
+                messageDiv.innerHTML = '<div class="error">Error connecting to server. Check console for details.</div>';
+            }
+        }
+
+        async function loadTexts() {
+            const list = document.getElementById("textList");
+            const messageDiv = document.getElementById("message");
+            
+            console.log('Loading texts from:', `${API_BASE}/texts`);
+            try {
+                const response = await fetch(`${API_BASE}/texts`);
+                console.log('Load response status:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Loaded data:', data);
+                    list.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        list.innerHTML = '<li>No texts stored yet</li>';
+                    } else {
+                        data.forEach(item => {
+                            const li = document.createElement("li");
+                            li.textContent = item.text;
+                            list.appendChild(li);
+                        });
+                    }
+                } else {
+                    console.error('Failed to load texts, status:', response.status);
+                    messageDiv.innerHTML = '<div class="error">Error loading texts</div>';
+                }
+            } catch (error) {
+                console.error('Error loading texts:', error);
+                messageDiv.innerHTML = '<div class="error">Error connecting to server. Check console for details.</div>';
+            }
+        }
+
+        // Load texts when page loads
+        window.onload = function() {
+            console.log('Page loaded, loading texts...');
+            loadTexts();
+        };
+    </script>
+</body>
+</html>
