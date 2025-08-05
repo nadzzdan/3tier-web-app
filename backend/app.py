@@ -52,7 +52,13 @@ def get_db():
 
 @app.get("/")
 async def root():
-    return {"message": "3-Tier Web App Backend"}
+    return {
+        "message": "🚀 3-Tier Web App Backend v2.0",
+        "version": "2.0",
+        "status": "running",
+        "timestamp": time.time(),
+        "features": ["CI/CD Pipeline", "Docker Hub Integration", "Modern UI"]
+    }
 
 @app.post("/submit")
 async def submit_text(request: Request):
@@ -65,7 +71,12 @@ async def submit_text(request: Request):
         conn.commit()
         cursor.close()
         conn.close()
-        return {"status": "success", "message": "Text saved successfully"}
+        return {
+            "status": "success", 
+            "message": "✅ Text saved successfully!",
+            "version": "2.0",
+            "timestamp": time.time()
+        }
     raise HTTPException(status_code=400, detail="No text provided")
 
 @app.get("/texts")
