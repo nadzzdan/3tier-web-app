@@ -3,14 +3,18 @@ name: CI - Build & Push to GHCR
 on:
   push:
     tags:
-      - "v*.*.*"   # Runs only when a version tag is pushed (e.g., v0.1.0)
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [frontend, backend]   # Build both frontend and backend
+        service: [frontend, backend]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
