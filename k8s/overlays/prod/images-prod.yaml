@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  template:
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/OWNER/3tier-backend:sha-REPLACE_WITH_CI_TAG
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  template:
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/OWNER/3tier-frontend:sha-REPLACE_WITH_CI_TAG
