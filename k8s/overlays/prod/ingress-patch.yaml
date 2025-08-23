@@ -1,27 +1,29 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  name: webapp-ingress-prod
   namespace: three-tier
 spec:
   rules:
-    - host: frontend.three-tier.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: frontend-service
-                port:
-                  number: 80
-    - host: backend.three-tier.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: backend-service
-                port:
-                  number: 80
+  - host: frontend.three-tier.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: frontend-prod
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: backend.three-tier.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: backend-prod
+            port:
+              number: 8000
+        path: /
+        pathType: Prefix
