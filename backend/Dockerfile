@@ -5,6 +5,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+LABEL org.opencontainers.image.source="https://github.com/nadzzdan/3tier-web-app"
+
 COPY . .
 
 EXPOSE 8000
