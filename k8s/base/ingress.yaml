@@ -1,28 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapp-ingress
-  namespace: three-tier
+  name: webapp-ingress   # 👈 match base ingress name
+  namespace: three-tier  # 👈 match base namespace
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
-  ingressClassName: traefik   # 👈 use Traefik
   rules:
-    - host: frontend.three-tier.localom
+    - host: frontend.three-tier.local   # 👈 corrected hostname
       http:
         paths:
-          - path: /
+          - path: /(.*)
             pathType: Prefix
             backend:
               service:
-                name: frontend-service
-                port:
-                  number: 80
-    - host: backend.three-tier.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: backend-service
+                name: frontend-service   # 👈 match base service name
                 port:
                   number: 80
