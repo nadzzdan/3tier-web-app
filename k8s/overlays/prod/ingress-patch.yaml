@@ -7,4 +7,4 @@ metadata:
     # nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   rules:
-    - host: your.domain.example.com
+    - host: frontend.three-tier.local
