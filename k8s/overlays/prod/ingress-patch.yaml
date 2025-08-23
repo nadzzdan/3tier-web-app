@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  name: webapp-ingress-prod
+  name: webapp-ingress
   namespace: three-tier
 spec:
   rules:
