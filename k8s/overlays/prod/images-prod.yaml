@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/nadzzdan/3tier-backend:sha-b62b5a062c8a66f92cf0afe7602f377a8056ec35
+          image: ghcr.io/nadzzdan/3tier-backend:sha-<COMMIT_SHA>
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -20,4 +20,4 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/nadzzdan/3tier-frontend:sha-b62b5a062c8a66f92cf0afe7602f377a8056ec35
+          image: ghcr.io/nadzzdan/3tier-frontend:sha-<COMMIT_SHA>
