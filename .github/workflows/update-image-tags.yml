@@ -1,0 +1,40 @@
+name: Update K8s Overlay Image Tags
+
+on:
+  workflow_run:
+    workflows: ["CI - Build & Push to GHCR"]
+    types:
+      - completed
+
+permissions:
+  contents: write  # required to commit changes to repo
+
+jobs:
+  update-overlay:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Get commit SHA
+        run: echo "COMMIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+
+      - name: Set image variables
+        run: |
+          echo "BACKEND_IMAGE=ghcr.io/${{ github.repository_owner }}/3tier-backend:sha-${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "FRONTEND_IMAGE=ghcr.io/${{ github.repository_owner }}/3tier-frontend:sha-${GITHUB_SHA}" >> $GITHUB_ENV
+
+      - name: Update images-prod.yaml
+        run: |
+          sed -i "s|image: ghcr.io/${{ github.repository_owner }}/3tier-backend:sha-.*|image: $BACKEND_IMAGE|" k8s/overlays/prod/images-prod.yaml
+          sed -i "s|image: ghcr.io/${{ github.repository_owner }}/3tier-frontend:sha-.*|image: $FRONTEND_IMAGE|" k8s/overlays/prod/images-prod.yaml
+
+      - name: Commit updated overlay
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add k8s/overlays/prod/images-prod.yaml
+          git commit -m "Update image tags to ${GITHUB_SHA}" || echo "No changes to commit"
+          git push
