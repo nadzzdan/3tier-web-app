@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: three-tier
+  namespace: three-tier
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"  # optional for HTTPS
 spec:
