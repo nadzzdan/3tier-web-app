@@ -6,6 +6,6 @@ namespace: three-tier
 resources:
   - ../../base
 
-patches:
-  - path: images-prod.yaml
-  - path: ingress-patch.yaml
+patchesStrategicMerge:
+  - images-prod.yaml
+  - ingress-patch.yaml
