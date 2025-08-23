@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: three-tier
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: frontend }
+  template:
+    metadata:
+      labels: { app: frontend }
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/owner/3tier-frontend:sha-PLACEHOLDER
+          ports:
+            - containerPort: 80
+          # Optional: if backend URL must be injected into JS/HTML, add a config or env + entrypoint.
