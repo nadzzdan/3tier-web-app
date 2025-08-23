@@ -3,17 +3,25 @@ kind: Ingress
 metadata:
   name: webapp-ingress
   namespace: three-tier
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # optional for HTTPS
 spec:
   rules:
-    - host: frontend.three-tier.local   # 👈 replace with your hostname
+    - host: frontend.three-tier.local
       http:
         paths:
-          - path: /(.*)
+          - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: frontend-service
+                port:
+                  number: 80
+    - host: backend.three-tier.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
                 port:
                   number: 80
