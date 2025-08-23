@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: three-tier
+data:
+  MYSQL_HOST: "mysql"
+  MYSQL_USER: "user"
+  MYSQL_DATABASE: "textsdb"
+  APP_HOST: "0.0.0.0"
+  APP_PORT: "8000"
+  DEBUG: "false"
+  ALLOWED_ORIGINS: "http://frontend.three-tier.local"
