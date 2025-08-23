@@ -3,8 +3,16 @@ kind: Ingress
 metadata:
   name: three-tier
   annotations:
-    # Example: add TLS or other controller-specific annotations here if needed
-    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # optional for HTTPS
 spec:
   rules:
-    - host: frontend.three-tier.local
+    - host: frontend.three-tier.local   # 👈 replace with your hostname
+      http:
+        paths:
+          - path: /(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
