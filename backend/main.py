@@ -72,8 +72,12 @@ def init_db():
             time.sleep(3)
     raise RuntimeError("Failed to initialize database after multiple attempts")
 
-# Initialize DB on startup
-init_db()
+# Initialize DB on startup - make it non-blocking
+try:
+    init_db()
+except Exception as e:
+    print(f"[WARNING] Database initialization failed: {e}")
+    print("[INFO] Application will start but database features may not work")
 
 @app.get("/")
 async def root():
@@ -114,6 +118,10 @@ async def get_texts():
     cursor.close()
     conn.close()
     return texts
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "timestamp": time.time()}
 
 # Add this at the end of the file
 if __name__ == "__main__":
