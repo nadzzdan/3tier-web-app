@@ -114,3 +114,8 @@ async def get_texts():
     cursor.close()
     conn.close()
     return texts
+
+# Add this at the end of the file
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host=APP_HOST, port=APP_PORT)
